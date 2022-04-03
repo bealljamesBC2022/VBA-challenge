@@ -1,0 +1,110 @@
+Sub stock()
+
+Dim i As Long
+
+Dim ticker_name As String
+
+Dim yearly_change As Double
+
+    yearly_change = 0
+
+Dim percent_change As Double
+
+    percent_change = 0
+
+Dim summary_row As Integer
+
+    summary_row = 2
+    
+Dim volume As Long
+    
+Dim closing_price As Double
+    
+Dim opening_price As Double
+
+    opening_price = Cells(2, 3).Value
+    
+Dim last_row As Long
+
+    last_row = Cells(Rows.Count, 1).End(xlUp).Row
+    
+'Dim ws_count As Integer
+
+   ' ws_count = ActiveWorkbook.Worksheets.Count
+    
+'For ws = 1 To ws_count
+
+'Dim ws As Worksheet
+     
+'For Each ws In ThisWorkbook.Worksheets
+
+ '   ws.Activate
+ 
+Dim j As Integer
+Dim ws_num As Integer
+
+Dim starting_ws As Worksheet
+Set starting_ws = ActiveSheet 'remember which worksheet is active in the beginning
+ws_num = ThisWorkbook.Worksheets.Count
+
+For j = 1 To ws_num
+    ThisWorkbook.Worksheets(j).Activate
+    'do whatever you need
+    last_row = ThisWorkbook.Worksheets(j).Cells(Rows.Count, 1).End(xlUp).Row
+    
+    For i = 2 To last_row
+    
+        'If ThisWorkbook.Worksheets(j).Cells(i + 1, 1).Value = ThisWorkbook.Worksheets(j).Cells(i, 1).Value Then
+        
+        volume = volume + ThisWorkbook.Worksheets(j).Cells(i, 7).Value
+    
+        'opening_price = ThisWorkbook.Worksheets(j).Cells(i, 3).Value
+    
+        If ThisWorkbook.Worksheets(j).Cells(i + 1, 1).Value <> ThisWorkbook.Worksheets(j).Cells(i, 1).Value Then
+        
+            ticker_name = ThisWorkbook.Worksheets(j).Cells(i, 1).Value
+            
+            'opening_price = ThisWorkbook.Worksheets(j).Cells(i, 3).Value
+            
+            closing_price = ThisWorkbook.Worksheets(j).Cells(i, 6).Value
+            
+            yearly_change = closing_price - opening_price
+            
+            'volume = volume + ThisWorkbook.Worksheets(j).Cells(i, 7).Value
+                        
+            If (opening_price > 0) Then
+                
+                percent_change = yearly_change / opening_price
+                
+            Else
+            
+                percent_change = 0
+                
+            End If
+            
+        ThisWorkbook.Worksheets(j).Cells(summary_row, 9).Value = ticker_name
+        
+        ThisWorkbook.Worksheets(j).Cells(summary_row, 10).Value = yearly_change
+        
+        ThisWorkbook.Worksheets(j).Cells(summary_row, 11).Value = percent_change
+        
+        ThisWorkbook.Worksheets(j).Cells(summary_row, 12).Value = volume
+                
+        summary_row = summary_row + 1
+        
+        opening_price = ThisWorkbook.Worksheets(j).Cells(i + 1, 3).Value
+        
+        volume = 0
+        
+        End If
+        
+    Next i
+    
+    'ThisWorkbook.Worksheets(j).Cells(1, 1) = 1  'this sets cell A1 of each sheet to "1"
+
+Next
+
+'starting_ws.Activate 'activate the worksheet that was originally active
+
+End Sub
+
